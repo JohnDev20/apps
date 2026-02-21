@@ -5,7 +5,7 @@ workflows:
     instance_type: mac_mini_m2
     environment:
       vars:
-        EMAIL_NOTIFY: "SEU_EMAIL@gmail.com"
+        EMAIL_NOTIFY: "thebooking13@gmail.com"
     scripts:
       - name: Set up local.properties (optional)
         script: |
