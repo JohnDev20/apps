@@ -1,0 +1,53 @@
+workflows:
+  android-debug:
+    name: Android Debug APK
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      vars:
+        EMAIL_NOTIFY: "SEU_EMAIL@gmail.com"
+    scripts:
+      - name: Set up local.properties (optional)
+        script: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
+      - name: Build debug (no wrapper)
+        script: |
+          cd "$CM_BUILD_DIR"
+          gradle :app:assembleDebug
+    artifacts:
+      - app/build/outputs/apk/debug/app-debug.apk
+    publishing:
+      email:
+        recipients:
+          - $EMAIL_NOTIFY
+        notify:
+          success: true
+          failure: true
+
+  android-release:
+    name: Android Release APK (unsigned by default)
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      vars:
+        EMAIL_NOTIFY: "SEU_EMAIL@gmail.com"
+      # If you want signed release, set these in Codemagic UI:
+      # CM_KEYSTORE, CM_KEYSTORE_PASSWORD, CM_KEY_ALIAS, CM_KEY_PASSWORD
+      # And update app/build.gradle signingConfigs accordingly.
+    scripts:
+      - name: Set up local.properties (optional)
+        script: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
+      - name: Build release (no wrapper)
+        script: |
+          cd "$CM_BUILD_DIR"
+          gradle :app:assembleRelease
+    artifacts:
+      - app/build/outputs/apk/release/app-release.apk
+    publishing:
+      email:
+        recipients:
+          - $EMAIL_NOTIFY
+        notify:
+          success: true
+          failure: true
